@@ -116,6 +116,9 @@
                   <a class="nav-link" href="/jenkins">Jenkins</a>
                 </li>
                 <li class="nav-item">
+                  <a class="nav-link" href="/release">Release</a>
+                </li>
+                <li class="nav-item">
                   <a class="nav-link" href="#">About</a>
                 </li>
               </ul>

@@ -6,6 +6,10 @@ APP_ID=$(apkanalyzer manifest application-id $APK_PATH)
 VERSION_NAME=$(apkanalyzer manifest version-name $APK_PATH)
 VERSION_CODE=$(apkanalyzer manifest version-code $APK_PATH)
 COMMIT_ID=$(git rev-parse --short HEAD)
+CHANGE_LOG=$(git log --pretty=format:"%s" ${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..HEAD)
+# 替换CHANGE_LOG中的英文双引号
+CHANGE_LOG=${CHANGE_LOG//\"/ }
+BUILD_TIME=$(date "+%Y-%m-%d %H:%M:%S")
 
 echo $APK_PATH
 echo $MAPPING_PATH
@@ -14,6 +18,8 @@ echo $VERSION_NAME
 echo $VERSION_CODE
 echo $COMMIT_ID
 echo $APP_ICON
+echo $BUILD_TIME
+echo $CHANGE_LOG
 
 DEST_DIR=~/Android/server/build/${APP_ID}
 echo $DEST_DIR
@@ -24,7 +30,7 @@ cp -f ${APK_PATH} ${DEST_DIR}/app.apk
 cp -f ${MAPPING_PATH} ${DEST_DIR}/mapping-${COMMIT_ID}.txt
 cp -f ${APP_ICON} ${DEST_DIR}/icon.png
 
-echo "{\"name\":\"${APP_NAME}\", \"versionCode\":\"${VERSION_CODE}\", \"versionName\":\"${VERSION_NAME}\", \"packageName\":\"${APP_ID}\"}" > ${DEST_DIR}/app.json
+echo "{\"name\":\"${APP_NAME}\", \"versionCode\":\"${VERSION_CODE}\", \"versionName\":\"${VERSION_NAME}\", \"packageName\":\"${APP_ID}\", \"buildTime\":\"${BUILD_TIME}\", \"features\":\"${CHANGE_LOG}\"}" > ${DEST_DIR}/app.json
 
 
 # FIR网站token, 通过token获取上传证书
