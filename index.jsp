@@ -97,7 +97,7 @@
 
   <body>
 
-    <script src="http://static.runoob.com/assets/qrcode/qrcode.min.js"></script>
+    <script src="https://static.runoob.com/assets/qrcode/qrcode.min.js"></script>
 
     <header>
       <div class="navbar navbar-dark bg-dark box-shadow">
