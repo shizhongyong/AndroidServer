@@ -3,7 +3,9 @@
 APK_PATH=$(find app/build/outputs/apk/ -name "*.apk" -type f)
 MAPPING_PATH=$(find app/build/outputs/mapping/ -name "mapping.txt" -type f)
 APP_ID=$(apkanalyzer manifest application-id $APK_PATH)
-VERSION_NAME=$(apkanalyzer manifest version-name $APK_PATH)
+# 当compileSdkVersion = 28时，apkanalyzer取version-name会返回问号
+# VERSION_NAME=$(apkanalyzer manifest version-name $APK_PATH)
+VERSION_NAME=$(aapt dump badging $APK_PATH | grep versionName | awk '{print $4}' | awk -F[\'] '{print $2}')
 VERSION_CODE=$(apkanalyzer manifest version-code $APK_PATH)
 COMMIT_ID=$(git rev-parse --short HEAD)
 CHANGE_LOG=$(git log --pretty=format:"%s" ${GIT_PREVIOUS_SUCCESSFUL_COMMIT}..HEAD)
