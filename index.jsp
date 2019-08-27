@@ -18,6 +18,13 @@
       File build = new File(root, "build");
       File[] appDirs = build.listFiles();
       if (appDirs != null && appDirs.length > 0) {
+        Arrays.sort(appDirs, new Comparator<File>() {
+          @Override
+          public int compare(File f1, File f2) {
+              return f1.compareTo(f2);
+          }
+        });
+        
         for (File dir : appDirs) {
           if (!dir.isDirectory()) {
             continue;
