@@ -9,6 +9,16 @@ fi
 
 ./gradlew clean $CMD
 
+# $?: 上个命令的退出状态，或函数的返回值
+ret=$?
+
+if [ $ret -eq 0 ];then
+        echo 打包成功
+else
+        echo 打包失败
+        exit $ret
+fi
+
 APK_ROOT=app/build/outputs/apk
 MAPPING_ROOT=app/build/outputs/mapping
 RELEASE_ROOT=/Users/jingxin/Android/server/release
