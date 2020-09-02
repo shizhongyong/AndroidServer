@@ -36,6 +36,11 @@ for file in $APK_ROOT/*; do
 		continue
 	fi
 
+	if [[ ! $MAPPING_FILE ]]; then
+		#从build tools 3.6.0开始，mapping目录有变化。便如：mapping/officialRelease
+	    MAPPING_FILE=$(find $MAPPING_ROOT/${CHANNEL}Release -name "mapping.txt" -type f | head -n 1)
+	fi
+
 	APP_ID=$(apkanalyzer manifest application-id $APK_FILE)
 	RELEASE_PATH=$RELEASE_ROOT/$APP_ID/$CHANNEL
 
