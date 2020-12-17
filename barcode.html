@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"> 
+	<title>条码生成</title>
+	<style type="text/css">
+		body {
+			padding: 5px;
+		}
+		.content {
+			display: flex;
+			flex-direction: row;
+		}
+
+		#values {
+			padding-left: 10px;
+		}
+
+		.barcode-container {
+			width: 300px;
+		}
+
+		.barcode {
+			width: 20%;
+			min-width: 300px;
+		}
+
+		.value-text {
+			color: #4A4C5B;
+			font-weight: normal;
+			margin-right: 10px;
+			cursor: pointer;
+		}
+
+		#json-key {
+			margin-top: 10px;
+			margin-bottom: 10px;
+			padding: 3px;
+		}
+
+		#json {
+			width: 100%;
+			height: 300px;
+			padding: 3px;
+			text-align: start;
+			resize: none;
+		}
+	</style>
+
+	<script src="js/JsBarcode.all.min.js"></script>
+	<script type="text/javascript">
+		var lastElement = null;
+
+		function pickUp() {
+			var key = document.getElementById("json-key").value;
+			if (!key || key == null) {
+				alert('请输入Key');
+				return;
+			}
+
+			var json = document.getElementById("json").value;
+			if (!json || json == null) {
+				alert('请输入JSON');
+				return;
+			}
+			
+			try {
+				var jsonObj = JSON.parse(json);
+
+				var values = new Array();
+				parseValueInJson(values, jsonObj, key);
+
+				showValues(values);
+			} catch (e) {
+				console.log(e)
+				alert('JSON格式错误！')
+			}
+		}
+
+		function parseValueInJson(values, jsonObj, key) {
+			if (!jsonObj || (typeof jsonObj != 'object')) {
+				return
+			}
+			for (var jsonKey in jsonObj) {
+				var jsonValue = jsonObj[jsonKey]
+				if (typeof jsonValue == 'object') {
+					parseValueInJson(values, jsonValue, key)
+				} else {
+					if (jsonKey == key) {
+						values.push(jsonValue);
+					}
+				}
+			}
+		}
+
+		function showValues(values) {
+			if (!values || (typeof values != 'object')) {
+				return
+			}
+
+			var div = document.getElementById("values");
+			div.innerHTML = ""
+
+			for (var i = 0, len = values.length; i < len; i++) {
+				var spanNode = document.createElement("span");
+				var textNode = document.createTextNode(values[i]);
+				spanNode.setAttribute("class", "value-text");
+				spanNode.setAttribute("onclick", "clickValue(this)");
+				spanNode.appendChild(textNode);
+				div.appendChild(spanNode);
+			}
+		}
+
+		function clickValue(obj) {
+			obj.style['color'] = "#444653"
+			obj.style['font-weight'] = 'bold'
+
+			JsBarcode(".barcode", obj.innerHTML);
+
+			if (lastElement) {
+				lastElement.style['color'] = "#4A4C5B"
+				lastElement.style['font-weight'] = 'normal'
+			}
+			lastElement = obj;
+		}
+	</script>
+</head>
+<body>
+	<p><h2 align="center">解析JSON中的指定Key，并生成条形码</h2></p>
+	<div class="content">
+		<div class="barcode-container">
+			<svg class="barcode"></svg>
+		</div>
+
+		<div id="values">
+		</div>
+	</div>
+	<input type="text" id="json-key" name="json-key" placeholder="请输入Key" maxlength="50" size="30" value="third_party_id">
+	<button onclick="pickUp()">提取</button>
+	<textarea id="json" name="json" placeholder="请输入JSON"></textarea>
+
+	<script type="text/javascript">
+		JsBarcode(".barcode", "S.L.T");
+	</script>
+</body>
+</html>
