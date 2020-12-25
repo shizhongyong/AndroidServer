@@ -129,7 +129,7 @@
                   <a class="nav-link" href="/iOS">iOS</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="/barcode.html" target="_blank">条形码</a>
+                  <a class="nav-link" href="/barcode.html" target="_blank">条码</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="#">About</a>
