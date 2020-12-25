@@ -83,6 +83,16 @@
 			}
 		}
 
+		function generate() {
+			var key = document.getElementById("json-key").value;
+			if (!key || key == null) {
+				alert('请输入Key');
+				return;
+			}
+
+			JsBarcode(".barcode", key);
+		}
+
 		function parseValueInJson(values, jsonObj, key) {
 			if (!jsonObj || (typeof jsonObj != 'object')) {
 				return
@@ -143,6 +153,7 @@
 	</div>
 	<input type="text" id="json-key" name="json-key" placeholder="请输入Key" maxlength="50" size="30" value="third_party_id">
 	<button onclick="pickUp()">提取</button>
+	<button onclick="generate()">直接生成</button>
 	<textarea id="json" name="json" placeholder="请输入JSON"></textarea>
 
 	<script type="text/javascript">
