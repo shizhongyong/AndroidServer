@@ -22,13 +22,29 @@
 			align-content: flex-start;
 		}
 
-		.barcode-container {
+		.container {
 			width: 300px;
+			height: 160px;
+			position: relative;
 		}
 
-		.barcode {
-			width: 20%;
-			min-width: 300px;
+		#barcode {
+			width: 300px;
+			height: 150px;
+			position: absolute;
+		}
+
+		#qrcode {
+			width: 150px;
+			height: 150px;
+			position: absolute;
+			margin-left: 75px;
+			background-color: yellow;
+			display: none;
+		}
+
+		.radio {
+			display: inline;
 		}
 
 		.value-text {
@@ -54,8 +70,28 @@
 	</style>
 
 	<script src="js/JsBarcode.all.min.js"></script>
+	<script src="js/qrcode.min.js"></script>
 	<script type="text/javascript">
+		var codeText = null;
 		var lastElement = null;
+
+		function isBarcode() {
+			var barcodeRadio = document.getElementById("barcodeRadio");
+			return barcodeRadio.checked;
+		}
+
+		function changeType(type) {
+			var barcode = document.getElementById("barcode");
+			var qrcode = document.getElementById("qrcode");
+			if (type == 'barcode') {
+				barcode.style['display'] = "block"
+				qrcode.style['display'] = "none"
+			} else {
+				barcode.style['display'] = "none"
+				qrcode.style['display'] = "block"
+			}
+			showCode(codeText);
+		}
 
 		function pickUp() {
 			var key = document.getElementById("json-key").value;
@@ -90,7 +126,7 @@
 				return;
 			}
 
-			JsBarcode(".barcode", key);
+			showCode(key);
 		}
 
 		function parseValueInJson(values, jsonObj, key) {
@@ -131,25 +167,39 @@
 			obj.style['color'] = "#444653"
 			obj.style['font-weight'] = 'bold'
 
-			JsBarcode(".barcode", obj.innerHTML);
-
+			showCode(obj.innerHTML);
+			
 			if (lastElement) {
 				lastElement.style['color'] = "#4A4C5B"
 				lastElement.style['font-weight'] = 'normal'
 			}
 			lastElement = obj;
 		}
+
+		function showCode(text) {
+			codeText = text;
+			if (isBarcode()) {
+				JsBarcode("#barcode", text);
+			} else {
+				qrcode.makeCode(text);
+			}
+		}
 	</script>
 </head>
 <body>
-	<p><h2 align="center">解析JSON中的指定Key，并生成条形码</h2></p>
+	<p><h2 align="center">解析JSON中的指定Key，并生成条形码/二维码</h2></p>
 	<div class="content">
-		<div class="barcode-container">
-			<svg class="barcode"></svg>
+		<div class="container">
+			<svg id="barcode"></svg>
+			<div id="qrcode"></div>
 		</div>
 
 		<div id="values">
 		</div>
+	</div>
+	<div style="display: flex; flex-direction: row;">
+		 <input id="barcodeRadio" type="radio" name="type" value="barcode" onclick="changeType(this.value)" checked="true">条形码<br>
+		 <input id="qrcodeRadio" type="radio" name="type" value="qrcode" onclick="changeType(this.value)">二维码<br>
 	</div>
 	<input type="text" id="json-key" name="json-key" placeholder="请输入Key" maxlength="50" size="30" value="third_party_id">
 	<button onclick="pickUp()">提取</button>
@@ -157,7 +207,12 @@
 	<textarea id="json" name="json" placeholder="请输入JSON"></textarea>
 
 	<script type="text/javascript">
-		JsBarcode(".barcode", "S.L.T");
+		var qrcode = new QRCode(document.getElementById("qrcode"), {
+						width : 150,
+						height : 150
+					});
+
+		showCode("S.L.T");
 	</script>
 </body>
 </html>
