@@ -139,6 +139,12 @@
 			showCode(key);
 		}
 
+		function keyDown(event) {
+			if (event.keyCode == 13) {
+				generate();
+			}
+		}
+
 		function parseValueInJson(values, jsonObj, key) {
 			if (!jsonObj || (typeof jsonObj != 'object')) {
 				return
@@ -211,9 +217,9 @@
 		 <input id="barcodeRadio" type="radio" name="type" value="barcode" onclick="changeType(this.value)" checked="true">条形码<br>
 		 <input id="qrcodeRadio" type="radio" name="type" value="qrcode" onclick="changeType(this.value)">二维码<br>
 	</div>
-	<input type="text" id="json-key" name="json-key" placeholder="请输入Key" maxlength="50" size="30" value="third_party_id">
-	<button onclick="pickUp()">提取</button>
+	<input type="text" id="json-key" name="json-key" placeholder="请输入Key" maxlength="50" size="30" value="third_party_id" onkeydown="keyDown(event)">
 	<button onclick="generate()">直接生成</button>
+	<button onclick="pickUp()">提取JSON</button>
 	<textarea id="json" name="json" placeholder="请输入JSON"></textarea>
 
 	<script type="text/javascript">
